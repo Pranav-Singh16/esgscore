@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import postcss from 'rollup-plugin-postcss';
 
 export default defineConfig({
-  base: './', // or remove this line for relative paths
-  plugins: [react()],
+  base: './',
+  plugins: [react(), postcss()],
   build: {
     outDir: 'dist',
     minify: true,
@@ -16,6 +17,16 @@ export default defineConfig({
     strictPort: true,
     fs: {
       cache: 'mem',
+    },
+  },
+  css: {
+    postcss: {
+      plugins: [
+        require('postcss-webkit-text-size-adjust')({
+          standardProperty: true,
+        }),
+        require('autoprefixer'), // Optional, for broader compatibility
+      ],
     },
   },
 });
