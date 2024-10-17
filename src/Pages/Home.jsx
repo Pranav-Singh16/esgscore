@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
 import { searchTermState, info } from '../state/atoms';
+import Chatbot from './Chatbot';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useRecoilState(searchTermState);
@@ -179,6 +180,9 @@ console.log(infoValue.scoreCsa)
 useEffect(() => {
   console.log("Updated info after set:", info);
 }, [info]);
+
+
+
 
   const MyChart = () => {
     const options = {
@@ -895,22 +899,25 @@ const RadarChart = ({categoriesTitle, companyName, companyValue, industryMean, i
 
     <div className="flex flex-row items-start justify-end">
       <div className="flex flex-col items-center">
-        <a href="/chatbot" target="_blank" rel="noopener noreferrer">
+        {/* <a href="/chatbot" target="_blank" rel="noopener noreferrer"> */}
           <button className="h-16 px-4 bg-blue-500 text-white rounded hover:bg-white hover:text-black flex items-center">
             Go to Chatbot
           </button>
-        </a>
+        {/* </a> */}
       </div>
-      <a href="/chatbot" target="_blank" rel="noopener noreferrer">
+      {/* <a href="/chatbot" target="_blank" rel="noopener noreferrer"> */}
         <img 
           src={botImage} 
           alt="Chatbot" 
           className="h-16 w-16 ml-4 rounded-lg shadow-lg cursor-pointer hover:opacity-75"
         />
-      </a>
+      {/* </a> */}
     </div>
 
       
+      </div>
+      <div className="mb-4">
+        <Chatbot />
       </div>
       
     </div>
