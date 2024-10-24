@@ -67,3 +67,8 @@ export const info = atom({
     }
   ]
 });
+
+export const chatbotVisibilityState = atom({
+  key: 'chatbotVisibilityState', // Unique key for the atom
+  default: false, // Default state (false means hidden)
+});

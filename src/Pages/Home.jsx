@@ -7,13 +7,18 @@ import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { searchTermState, info } from '../state/atoms';
+import { searchTermState, info, chatbotVisibilityState } from '../state/atoms';
 import Chatbot from './Chatbot';
+import MyChart from '../charts/MyChart';
+import EnvironmentalChart from '../charts/EnvironmentalChart';
+import EsgChart from '../charts/EsgChart';
+import RadarChart from '../charts/RadarChart';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useRecoilState(searchTermState);
   const [infoValue, setInfo] = useRecoilState(info);
-  const [suggestions, setSuggestions] = useState([]); // Define suggestions state
+  const [suggestions, setSuggestions] = useState([]);
+  const [chatbotVisibility, setChatbotVisibility] = useRecoilState(chatbotVisibilityState);
 
   const companyData = {
     "Apple Inc. (AAPL)": 4004214,
@@ -91,8 +96,12 @@ const Home = () => {
     handleSubmit(); 
   };
 
+  const toggleChatbot = () => {
+    setChatbotVisibility(prevState => !prevState); // Toggle the visibility state
+  };
+
   useEffect(() => {
-    console.log('Search term changed:', searchTerm);
+    // console.log('Search term changed:', searchTerm);
   }, [searchTerm]);
 
   // Fetch data and update states
@@ -162,360 +171,360 @@ const Home = () => {
       };
 
       setInfo(newInfo);
-      console.log("Updated Company Name:", newInfo);
+      // console.log("Updated Company Name:", newInfo);
 
     } catch (error) {
-      console.error("Error fetching data:", error);
+      // console.error("Error fetching data:", error);
     }
   };
 
   // useEffect to log all updated state values
   useEffect(() => {
-    console.log("Updated info after set:", infoValue);
+    // console.log("Updated info after set:", infoValue);
   }, [infoValue]);
 
 
-console.log(infoValue.scoreCsa)
+// console.log(infoValue.scoreCsa)
 // useEffect to log all updated state values
 useEffect(() => {
-  console.log("Updated info after set:", info);
+  // console.log("Updated info after set:", info);
 }, [info]);
 
 
 
 
-  const MyChart = () => {
-    const options = {
-      chart: {
-        type: 'column',
-        // margin: [30, 30, 50, 50],
-         // Adjust margins as needed
-        height : 290,
-        width : 564,
-      },
-      title: {
-        text: null,
-      },
-      xAxis: {
-        categories: ['Global CSA Score', 'Modeled Scores', 'Global ESG Score'],
-      },
-      yAxis: {
-        min: 0,
-        max: 100,
-        tickPositions: [0, 50, 100],
-        title: {
-          text: null,
-        },
-      },
-      series: [
-        {
-          // Remove the name
-          data: [
-            { y: infoValue.scoreCsa, color: '#4B7685' }, // CSA Score
-            { y: infoValue.scoreModeled, color: '#699C27' }, // Modeled Score
-            { y: infoValue.scoreEsg, color: '#2E9BC1' }, // ESG Score
-          ],
-          dataLabels: {
-            enabled: true,
-          },
-        },
-      ],
-      plotOptions: {
-        column: {
-          dataLabels: {
-            enabled: true,
-          },
-        },
-      },
-      legend: {
-        enabled: false, // Disable the legend
-      },
-    };
+//   const MyChart = () => {
+//     const options = {
+//       chart: {
+//         type: 'column',
+//         // margin: [30, 30, 50, 50],
+//          // Adjust margins as needed
+//         height : 290,
+//         width : 564,
+//       },
+//       title: {
+//         text: null,
+//       },
+//       xAxis: {
+//         categories: ['Global CSA Score', 'Modeled Scores', 'Global ESG Score'],
+//       },
+//       yAxis: {
+//         min: 0,
+//         max: 100,
+//         tickPositions: [0, 50, 100],
+//         title: {
+//           text: null,
+//         },
+//       },
+//       series: [
+//         {
+//           // Remove the name
+//           data: [
+//             { y: infoValue.scoreCsa, color: '#4B7685' }, // CSA Score
+//             { y: infoValue.scoreModeled, color: '#699C27' }, // Modeled Score
+//             { y: infoValue.scoreEsg, color: '#2E9BC1' }, // ESG Score
+//           ],
+//           dataLabels: {
+//             enabled: true,
+//           },
+//         },
+//       ],
+//       plotOptions: {
+//         column: {
+//           dataLabels: {
+//             enabled: true,
+//           },
+//         },
+//       },
+//       legend: {
+//         enabled: false, // Disable the legend
+//       },
+//     };
 
-    return <div>
-      <HighchartsReact containerProps={{ style: { height: "0%" } }} highcharts={Highcharts} options={options} />
-      </div>
-  };
+//     return <div>
+//       <HighchartsReact containerProps={{ style: { height: "0%" } }} highcharts={Highcharts} options={options} />
+//       </div>
+//   };
   
-  const EnvironmentalChart = ({ companyValue, industryMeanValue, industryMaxValue, name, title, clr }) => {
-  const companyThickness = 10; // Thinnest
-  const industryMeanThickness = 20; // Moderate
-  const industryMaxThickness = 30; // Thickest
+//   const EnvironmentalChart = ({ companyValue, industryMeanValue, industryMaxValue, name, title, clr }) => {
+//   const companyThickness = 10; // Thinnest
+//   const industryMeanThickness = 20; // Moderate
+//   const industryMaxThickness = 30; // Thickest
 
-  const options = {
-    chart: {
-      type: "bar",
-      height: 50,
-      width: 400,
-      backgroundColor: "transparent",
-      margin: [-20, 0, -20, 0],
-    },
-    title: {
-      text: null,
-    },
-    xAxis: {
-      categories: [title],
-      visible: false,
-    },
-    yAxis: {
-      min: 0,
-      max: industryMaxValue,
-      visible: false,
-    },
-    plotOptions: {
-      bar: {
-        grouping: false, // Disable grouping to overlay the bars
-        borderWidth: 0,
-      },
-    },
-    series: [
-      {
-        name: "Industry Max",
-        data: [
-          {
-            y: industryMaxValue,
-            // label: "Industry Max 95",
-          },
-        ],
-        color: "rgba(224, 224, 224, 0.5)", // Transparent color for Industry Max
-        pointWidth: industryMaxThickness, // Thickest bar
-        dataLabels: {
-          enabled: false,
-          inside: false,
-          align: "right",
-          // format: "Industry Max 95",
-          style: {
-            color: "#000",
-          },
-        },
-      },
-      {
-        name: "Industry Mean",
-        data: [
-          {
-            y: industryMeanValue,
-            // label: "Industry Mean 44",
-          },
-        ],
-        color: "rgba(120, 120, 120, 0.7)", // Semi-transparent color for Industry Mean
-        pointWidth: industryMeanThickness, // Moderate thickness
-        dataLabels: {
-          enabled: false,
-          inside: false,
-          align: "right",
-          // format: "Industry Mean 44",
-          style: {
-            color: "#000",
-          },
-        },
-      },
-      {
-        name: name,
-        data: [
-          {
-            y: companyValue,
-            // label: "Apple Inc. 54",
-          },
-        ],
-        color: clr, // Solid color for Apple Inc.
-        pointWidth: companyThickness, // Thinnest bar
-        dataLabels: {
-          enabled: false,
-          inside: false,
-          align: "right",
-          // format: "Apple Inc. 54",
-          style: {
-            color: "#000",
-          },
-        },
-      },
-    ],
-    legend: {
-      enabled: false,
-    },
-    credits: {
-      enabled: false,
-    },
-  };
+//   const options = {
+//     chart: {
+//       type: "bar",
+//       height: 50,
+//       width: 400,
+//       backgroundColor: "transparent",
+//       margin: [-20, 0, -20, 0],
+//     },
+//     title: {
+//       text: null,
+//     },
+//     xAxis: {
+//       categories: [title],
+//       visible: false,
+//     },
+//     yAxis: {
+//       min: 0,
+//       max: industryMaxValue,
+//       visible: false,
+//     },
+//     plotOptions: {
+//       bar: {
+//         grouping: false, // Disable grouping to overlay the bars
+//         borderWidth: 0,
+//       },
+//     },
+//     series: [
+//       {
+//         name: "Industry Max",
+//         data: [
+//           {
+//             y: industryMaxValue,
+//             // label: "Industry Max 95",
+//           },
+//         ],
+//         color: "rgba(224, 224, 224, 0.5)", // Transparent color for Industry Max
+//         pointWidth: industryMaxThickness, // Thickest bar
+//         dataLabels: {
+//           enabled: false,
+//           inside: false,
+//           align: "right",
+//           // format: "Industry Max 95",
+//           style: {
+//             color: "#000",
+//           },
+//         },
+//       },
+//       {
+//         name: "Industry Mean",
+//         data: [
+//           {
+//             y: industryMeanValue,
+//             // label: "Industry Mean 44",
+//           },
+//         ],
+//         color: "rgba(120, 120, 120, 0.7)", // Semi-transparent color for Industry Mean
+//         pointWidth: industryMeanThickness, // Moderate thickness
+//         dataLabels: {
+//           enabled: false,
+//           inside: false,
+//           align: "right",
+//           // format: "Industry Mean 44",
+//           style: {
+//             color: "#000",
+//           },
+//         },
+//       },
+//       {
+//         name: name,
+//         data: [
+//           {
+//             y: companyValue,
+//             // label: "Apple Inc. 54",
+//           },
+//         ],
+//         color: clr, // Solid color for Apple Inc.
+//         pointWidth: companyThickness, // Thinnest bar
+//         dataLabels: {
+//           enabled: false,
+//           inside: false,
+//           align: "right",
+//           // format: "Apple Inc. 54",
+//           style: {
+//             color: "#000",
+//           },
+//         },
+//       },
+//     ],
+//     legend: {
+//       enabled: false,
+//     },
+//     credits: {
+//       enabled: false,
+//     },
+//   };
 
-  return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <HighchartsReact highcharts={Highcharts} options={options} />
+//     </div>
+//   );
+// };
 
-const EsgChart = ({ industryMaxValue, industryMeanValue, companyValue, clr, showTargetLine, secClr = '#e1e7e8', thirdValue = 0, thirdclr = "#699C27", lineType = 'Straight' }) => {
-  const Thickness = 150
+// const EsgChart = ({ industryMaxValue, industryMeanValue, companyValue, clr, showTargetLine, secClr = '#e1e7e8', thirdValue = 0, thirdclr = "#699C27", lineType = 'Straight' }) => {
+//   const Thickness = 150
 
-  const options = {
-    chart: {
-      type: 'column', // Specify the chart type
-      height: 350,
-      width: 205,
-      backgroundColor: 'transparent',
-      // margin: [10, -10, 5, 10],
-    },
-    title: {
-      text: null,
-    },
-    xAxis: {
-      categories: ['Global CSA Score', 'Modeled Scores', 'Global ESG Score'],
-      visible: false,
-    },
-    yAxis: {
-      min: 0,
-      max: 100,
-      tickPositions: [0, 20, 40, 60, 80, 100],
-      title: {
-        text: null,
-      },
-      plotLines: showTargetLine ? [{
-        value: industryMaxValue, // The y-value where the line will be drawn
-        color: 'black', // Color of the line
-        width: 1, // Width of the line
-        zIndex: 5, // Layering order (higher values are on top)
-        dashStyle: lineType,
-        label: {
-          text: null, // Label for the line
-          align: 'center',
-          verticalAlign: 'bottom',
-          style: {
-            color: '',
-            // fontWeight: 'bold',
-          },
-        },
-      }] : [], // Make sure to add an empty array if not shown
-    },
-    plotOptions: {
-      column: {
-        grouping: false, // Disable grouping to overlay the bars
-        borderWidth: 0,
-      },
-    },
-    series: [
-      {
-        name: 'Including Modeled Scores',
-        data: [{ y: thirdValue }],
-        color: thirdclr,
-        pointWidth: Thickness,
-        dataLabels: {
-          enabled: false,
-        },
-      },
-      {
-        name: 'Potential Score based on Disclosure Rate',
-        data: [{ y: industryMeanValue }],
-        color: secClr,
-        pointWidth: Thickness,
-        dataLabels: {
-          enabled: false,
-        },
-      },
-      {
-        name: 'Actual Score based on Disclosure',
-        data: [{ y: companyValue }],
-        color: clr,
-        pointWidth: Thickness,
-        dataLabels: {
-          enabled: false,
-        },
-      },
-    ],
-    legend: {
-      enabled: false,
-    },
-    credits: {
-      enabled: false,
-    },
-  };
+//   const options = {
+//     chart: {
+//       type: 'column', // Specify the chart type
+//       height: 350,
+//       width: 205,
+//       backgroundColor: 'transparent',
+//       // margin: [10, -10, 5, 10],
+//     },
+//     title: {
+//       text: null,
+//     },
+//     xAxis: {
+//       categories: ['Global CSA Score', 'Modeled Scores', 'Global ESG Score'],
+//       visible: false,
+//     },
+//     yAxis: {
+//       min: 0,
+//       max: 100,
+//       tickPositions: [0, 20, 40, 60, 80, 100],
+//       title: {
+//         text: null,
+//       },
+//       plotLines: showTargetLine ? [{
+//         value: industryMaxValue, // The y-value where the line will be drawn
+//         color: 'black', // Color of the line
+//         width: 1, // Width of the line
+//         zIndex: 5, // Layering order (higher values are on top)
+//         dashStyle: lineType,
+//         label: {
+//           text: null, // Label for the line
+//           align: 'center',
+//           verticalAlign: 'bottom',
+//           style: {
+//             color: '',
+//             // fontWeight: 'bold',
+//           },
+//         },
+//       }] : [], // Make sure to add an empty array if not shown
+//     },
+//     plotOptions: {
+//       column: {
+//         grouping: false, // Disable grouping to overlay the bars
+//         borderWidth: 0,
+//       },
+//     },
+//     series: [
+//       {
+//         name: 'Including Modeled Scores',
+//         data: [{ y: thirdValue }],
+//         color: thirdclr,
+//         pointWidth: Thickness,
+//         dataLabels: {
+//           enabled: false,
+//         },
+//       },
+//       {
+//         name: 'Potential Score based on Disclosure Rate',
+//         data: [{ y: industryMeanValue }],
+//         color: secClr,
+//         pointWidth: Thickness,
+//         dataLabels: {
+//           enabled: false,
+//         },
+//       },
+//       {
+//         name: 'Actual Score based on Disclosure',
+//         data: [{ y: companyValue }],
+//         color: clr,
+//         pointWidth: Thickness,
+//         dataLabels: {
+//           enabled: false,
+//         },
+//       },
+//     ],
+//     legend: {
+//       enabled: false,
+//     },
+//     credits: {
+//       enabled: false,
+//     },
+//   };
 
-  return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <HighchartsReact highcharts={Highcharts} options={options} />
+//     </div>
+//   );
+// };
 
-HighchartsMore(Highcharts);
+// HighchartsMore(Highcharts);
 
-const RadarChart = ({categoriesTitle, companyName, companyValue, industryMean, industryMax }) => {
-  const options = {
-    chart: {
-      polar: true,
-      type: "line"
-    },
-    title: {
-      text: null,
-      x: -100
-    },
-    pane: {
-      size: "90%"
-    },
-    xAxis: {
-      categories: categoriesTitle,
-      tickmarkPlacement: "on",
-      lineWidth: 0
-    },
-    yAxis: {
-      gridLineInterpolation: "polygon",
-      lineWidth: 0,
-      min: 0,
-      max: 100
-    },
-    series: [
-      {
-        name: "Industry Max",
-        data: industryMax,
-        pointPlacement: "on",
-        marker: {
-          symbol: "circle",
-          radius: 4
-        }
-      },
-      {
-        name: "Industry Mean",
-        data: industryMean,
-        pointPlacement: "on",
-        marker: {
-          symbol: "circle",
-          radius: 4
-        }
-      },
-      {
-        name: companyName,
-        data: companyValue,
-        pointPlacement: "on",
-        marker: {
-          symbol: "square",
-          radius: 4
-        },
-        // Shading the area under the Apple series
-        fillOpacity: 0.2,
-        color: '#FF0000', // Shaded area color (light red)
-        lineColor: '#FF0000', // Line color
-        zIndex: 1,
-        // This enables the area fill
-        type: 'area'
-      },
-    ],
-    plotOptions: {
-      series: {
-        lineWidth: 2,
-        marker: {
-          enabled: true,
-          fillColor: "#000"
-        }
-      }
-    }
-  };
+// const RadarChart = ({categoriesTitle, companyName, companyValue, industryMean, industryMax }) => {
+//   const options = {
+//     chart: {
+//       polar: true,
+//       type: "line"
+//     },
+//     title: {
+//       text: null,
+//       x: -100
+//     },
+//     pane: {
+//       size: "90%"
+//     },
+//     xAxis: {
+//       categories: categoriesTitle,
+//       tickmarkPlacement: "on",
+//       lineWidth: 0
+//     },
+//     yAxis: {
+//       gridLineInterpolation: "polygon",
+//       lineWidth: 0,
+//       min: 0,
+//       max: 100
+//     },
+//     series: [
+//       {
+//         name: "Industry Max",
+//         data: industryMax,
+//         pointPlacement: "on",
+//         marker: {
+//           symbol: "circle",
+//           radius: 4
+//         }
+//       },
+//       {
+//         name: "Industry Mean",
+//         data: industryMean,
+//         pointPlacement: "on",
+//         marker: {
+//           symbol: "circle",
+//           radius: 4
+//         }
+//       },
+//       {
+//         name: companyName,
+//         data: companyValue,
+//         pointPlacement: "on",
+//         marker: {
+//           symbol: "square",
+//           radius: 4
+//         },
+//         // Shading the area under the Apple series
+//         fillOpacity: 0.2,
+//         color: '#FF0000', // Shaded area color (light red)
+//         lineColor: '#FF0000', // Line color
+//         zIndex: 1,
+//         // This enables the area fill
+//         type: 'area'
+//       },
+//     ],
+//     plotOptions: {
+//       series: {
+//         lineWidth: 2,
+//         marker: {
+//           enabled: true,
+//           fillColor: "#000"
+//         }
+//       }
+//     }
+//   };
 
-  return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
-  );
-};
+//   return (
+//     <div>
+//       <HighchartsReact highcharts={Highcharts} options={options} />
+//     </div>
+//   );
+// };
 
 
  return (
@@ -822,7 +831,7 @@ const RadarChart = ({categoriesTitle, companyName, companyValue, industryMean, i
               <div className='w-full h-0.5 bg-gray-300 mt-12' />
               <div className="flex justify-between text-xs pt-2">
                 <div className="pr-2 w-3/5 font-normal">Number of questions based on modeling approaches</div>
-                <div className="w-1/5 text-right font-medium">{infoValue.noofquesStart}/{infoValue.noofquesStartEnd}</div>
+                <div className="w-1/5 text-right font-medium">{infoValue.noofquesStart}/{infoValue.noofquesEnd}</div>
               </div>
               <div className='w-full h-0.5 bg-gray-300 my-2' />
               <div className="px-3 text-left font-normal text-xs">Questions based on modeling approaches vary by industry</div>
@@ -895,30 +904,62 @@ const RadarChart = ({categoriesTitle, companyName, companyValue, industryMean, i
                 categoriesTitle={infoValue.graphCategoriesTitle}
             />
           </div>
+
+          <div className="mt-4">
+      {/* {chatbotVisibility && <Chatbot />} */}
+        {/* Render the Chatbot only if it's visible */}
+    </div>
         </div>
 
-    <div className="flex flex-row items-start justify-end">
-      <div className="flex flex-col items-center">
+    {/* <div className="flex flex-row items-start justify-end">
+      <div className="flex flex-col items-center"> */}
         {/* <a href="/chatbot" target="_blank" rel="noopener noreferrer"> */}
-          <button className="h-16 px-4 bg-blue-500 text-white rounded hover:bg-white hover:text-black flex items-center">
+          {/* <button className="h-16 px-4 bg-blue-500 text-white rounded hover:bg-white hover:text-black flex items-center">
             Go to Chatbot
-          </button>
+          </button> */}
         {/* </a> */}
-      </div>
+      {/* </div> */}
       {/* <a href="/chatbot" target="_blank" rel="noopener noreferrer"> */}
-        <img 
+        {/* <img 
           src={botImage} 
           alt="Chatbot" 
           className="h-16 w-16 ml-4 rounded-lg shadow-lg cursor-pointer hover:opacity-75"
-        />
+        /> */}
       {/* </a> */}
+    {/* </div> */}
+
+    {/* <div className="mt-4">
+        <Chatbot />
+      </div> */}
+
+<div className="flex flex-row items-start justify-end">
+      {/* Button to open/close the chatbot */}
+      <div className="flex flex-col items-center">
+        <button 
+          onClick={toggleChatbot}  // Toggle the chatbot visibility
+          className="h-16 px-4 bg-blue-500 text-white rounded hover:bg-white hover:text-black flex items-center"
+        >
+          Go to Chatbot
+        </button>
+      </div>
+
+      {/* Image to open/close the chatbot */}
+      <img 
+        src={botImage}  // Assuming botImage is defined elsewhere
+        alt="Chatbot"
+        className="h-16 w-16 ml-4 rounded-lg shadow-lg cursor-pointer hover:opacity-75"
+        onClick={toggleChatbot}  // Toggle the chatbot visibility on click
+      />
     </div>
 
+    {/* Conditionally render the Chatbot */}
+    <div className="mt-4">
+      {chatbotVisibility && <Chatbot />}
+    </div>
+
+
+      </div>
       
-      </div>
-      <div className="mb-4">
-        <Chatbot />
-      </div>
       
     </div>
   );
