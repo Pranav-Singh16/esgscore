@@ -1,101 +1,105 @@
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import HighchartsMore from "highcharts/highcharts-more";
-import React from 'react';
+  import Highcharts from 'highcharts';
+  import HighchartsReact from 'highcharts-react-official';
+  import HighchartsMore from "highcharts/highcharts-more";
+  import React from 'react';
 
-
-
-const EsgChart = ({ industryMaxValue, industryMeanValue, companyValue, clr, showTargetLine, secClr = '#e1e7e8', thirdValue = 0, thirdclr = "#699C27", lineType = 'Straight' }) => {
-    const Thickness = 150
-  
-    const options = {
-      chart: {
-        type: 'column', // Specify the chart type
-        height: 350,
-        width: 205,
-        backgroundColor: 'transparent',
-        // margin: [10, -10, 5, 10],
-      },
-      title: {
-        text: null,
-      },
-      xAxis: {
-        categories: ['Global CSA Score', 'Modeled Scores', 'Global ESG Score'],
-        visible: false,
-      },
-      yAxis: {
-        min: 0,
-        max: 100,
-        tickPositions: [0, 20, 40, 60, 80, 100],
+  const EsgChart = ({ industryMaxValue, industryMeanValue, companyValue, clr, showTargetLine, secClr = '#e1e7e8', thirdValue = 0, thirdclr = "#699C27", lineType = 'Straight' }) => {
+      const Thickness = 150; // Adjusted for better visual balance
+    
+      const options = {
+        chart: {
+          type: 'column',
+          height: 350,
+          width: 250,
+          backgroundColor: 'transparent',
+        },
         title: {
           text: null,
         },
-        plotLines: showTargetLine ? [{
-          value: industryMaxValue, // The y-value where the line will be drawn
-          color: 'black', // Color of the line
-          width: 1, // Width of the line
-          zIndex: 5, // Layering order (higher values are on top)
-          dashStyle: lineType,
-          label: {
-            text: null, // Label for the line
-            align: 'center',
-            verticalAlign: 'bottom',
+        xAxis: {
+          categories: ['Global CSA Score', 'Modeled Scores', 'Global ESG Score'],
+          visible: false,
+        },
+        yAxis: {
+          min: 0,
+          max: 100,
+          tickPositions: [0, 20, 40, 60, 80, 100],
+          title: {
+            text: null,
             style: {
-              color: '',
-              // fontWeight: 'bold',
+              color: '#ffffff', // Set title color to white
             },
           },
-        }] : [], // Make sure to add an empty array if not shown
-      },
-      plotOptions: {
-        column: {
-          grouping: false, // Disable grouping to overlay the bars
-          borderWidth: 0,
+          labels: {
+            style: {
+              color: '#ffffff', // Set labels color to white
+            },
+          },
+          plotLines: showTargetLine ? [{
+            value: industryMaxValue,
+            color: '#FF0000', // Changed line color for visibility
+            width: 2,
+            zIndex: 5,
+            dashStyle: lineType,
+            label: {
+              text: null,
+            },
+          }] : [],
         },
-      },
-      series: [
-        {
-          name: 'Including Modeled Scores',
-          data: [{ y: thirdValue }],
-          color: thirdclr,
-          pointWidth: Thickness,
-          dataLabels: {
-            enabled: false,
+        plotOptions: {
+          column: {
+            grouping: false,
+            borderWidth: 0,
           },
         },
-        {
-          name: 'Potential Score based on Disclosure Rate',
-          data: [{ y: industryMeanValue }],
-          color: secClr,
-          pointWidth: Thickness,
-          dataLabels: {
-            enabled: false,
+        series: [
+          {
+            name: 'Including Modeled Scores',
+            data: [{ y: thirdValue }],
+            color: thirdclr,
+            pointWidth: Thickness,
+            dataLabels: {
+              enabled: false,
+            },
           },
-        },
-        {
-          name: 'Actual Score based on Disclosure',
-          data: [{ y: companyValue }],
-          color: clr,
-          pointWidth: Thickness,
-          dataLabels: {
-            enabled: false,
+          {
+            name: 'Potential Score based on Disclosure Rate',
+            data: [{ y: industryMeanValue }],
+            color: secClr,
+            pointWidth: Thickness,
+            dataLabels: {
+              enabled: false,
+            },
           },
+          {
+            name: 'Actual Score based on Disclosure',
+            data: [{ y: companyValue }],
+            color: clr,
+            pointWidth: Thickness,
+            dataLabels: {
+              enabled: false,
+            },
+          },
+        ],
+        legend: {
+          enabled: false,
         },
-      ],
-      legend: {
-        enabled: false,
-      },
-      credits: {
-        enabled: false,
-      },
-    };
-  
-    return (
-      <div>
-        <HighchartsReact highcharts={Highcharts} options={options} />
-      </div>
-    );
+        credits: {
+          enabled: false,
+        },
+        tooltip: {
+          style: {
+            color: '#ffffff', // Tooltip text color
+          },
+          backgroundColor: '#333333', // Tooltip background color
+        },
+      };
+    
+      return (
+        <div>
+          <HighchartsReact highcharts={Highcharts} options={options} />
+        </div>
+      );
   };
-  
 
-export default EsgChart;
+  export default EsgChart;
